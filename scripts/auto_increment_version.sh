@@ -1,6 +1,6 @@
 #!/bin/bash
 
- gh release list -L 100 | grep "^app2"
+ gh release list --limit 100 | grep "^app2"
 
 
 # get highest tag number
