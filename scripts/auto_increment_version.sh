@@ -68,7 +68,7 @@ echo ""
 # get current hash and see if it already has a tag
 GIT_COMMIT=`git rev-parse HEAD`
 # NEEDS_TAG=`git describe --contains $GIT_COMMIT`
-NEEDS_TAG=`git describe --contains $GIT_COMMIT` >/dev/null
+NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
 
 echo "NEEDS_TAG: ${NEEDS_TAG}"
 
