@@ -1,11 +1,9 @@
 #!/bin/bash
+# if a monorepo pass the app name
 
+# may need to increase for monorepo if several versions between
 GH_LIMIT=100
 MONOREPO_APP_NAME=$1
-# MONOREPO_APP_NAME=app1
-
-# gh release list --limit 100 | grep "^app2"
-# gh release list --limit 100 | grep "^app1" | head -1 | awk '{print $1}'
 
 
 if [[ ! -z ${MONOREPO_APP_NAME} ]]; then
@@ -13,7 +11,6 @@ if [[ ! -z ${MONOREPO_APP_NAME} ]]; then
   NEW_TAG_PREFIX="${MONOREPO_APP_NAME}/v"
   FULL_VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}')
   VERSION=$(echo ${FULL_VERSION} | cut -f2 -d /)
-  # VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}'| cut -f2 -d /)
 else
   echo "SINGLE REPO"
   NEW_TAG_PREFIX="v"
@@ -44,6 +41,7 @@ VNUM1=`echo $VNUM1 | sed 's/v//'`
 MAJOR=`git log --format=%B -n 1 HEAD | grep '#major'`
 MINOR=`git log --format=%B -n 1 HEAD | grep '#minor'`
 
+echo ""
 if [ "$MAJOR" ]; then
     echo "Update major version"
     VNUM1=$((VNUM1+1))
@@ -60,12 +58,11 @@ fi
 
 # create new tag
 NEW_VERSION="$VNUM1.$VNUM2.$VNUM3"
-# NEW_TAG="v$NEW_VERSION"
 NEW_TAG="${NEW_TAG_PREFIX}$NEW_VERSION"
 
-
-# echo "Updating $VERSION to $NEW_TAG"
+echo ""
 echo "Updating $FULL_VERSION to $NEW_TAG"
+echo ""
 
 # get current hash and see if it already has a tag
 GIT_COMMIT=`git rev-parse HEAD`
