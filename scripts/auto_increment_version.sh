@@ -1,13 +1,26 @@
 #!/bin/bash
 
- gh release list --limit 100 | grep "^app2"
+GH_LIMIT=100
+MONOREPO_APP_NAME=$1
+MONOREPO_APP_NAME=app1
+
+# gh release list --limit 100 | grep "^app2"
+# gh release list --limit 100 | grep "^app1" | head -1 | awk '{print $1}'
 
 
-# get highest tag number
-# https://stackoverflow.com/questions/62960533/how-to-use-git-commands-during-a-github-action
-# VERSION=`git describe --abbrev=0 --tags`
-# https://docs.github.com/en/actions/using-workflows/using-github-cli-in-workflows
-VERSION=`gh release view -q ".name" --json name`
+if [[ ! -z ${MONOREPO_APP_NAME} ]]; then
+  echo "MONOREPO: ${MONOREPO_APP_NAME}"
+  NEW_TAG_PREFIX="${MONOREPO_APP_NAME}/v"
+  VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}'| cut -f2 -d /)
+else
+  echo "SINGLE REPO"
+  NEW_TAG_PREFIX="v"
+  # get highest tag number
+  # https://stackoverflow.com/questions/62960533/how-to-use-git-commands-during-a-github-action
+  # VERSION=`git describe --abbrev=0 --tags`
+  # https://docs.github.com/en/actions/using-workflows/using-github-cli-in-workflows
+  VERSION=`gh release view -q ".name" --json name`
+fi
 
 # replace . with space so can split into an array
 VERSION_BITS=(${VERSION//./ })
@@ -38,7 +51,8 @@ fi
 
 # create new tag
 NEW_VERSION="$VNUM1.$VNUM2.$VNUM3"
-NEW_TAG="v$NEW_VERSION"
+# NEW_TAG="v$NEW_VERSION"
+NEW_TAG="${NEW_TAG_PREFIX}$NEW_VERSION"
 
 
 echo "Updating $VERSION to $NEW_TAG"
@@ -57,10 +71,10 @@ if [ -z "$NEEDS_TAG" ]; then
       exit ${rc}
     fi
     echo ${NEW_VERSION} > VERSION
-    echo ${NEW_TAG} > TAG_VERSION
+    # echo ${NEW_TAG} > TAG_VERSION
 else
     echo "Already a tag on this commit"
     echo $(echo ${VERSION} | sed 's/v//') > VERSION
-    echo ${VERSION} > TAG_VERSION
+    # echo ${VERSION} > TAG_VERSION
 fi
 exit 0
