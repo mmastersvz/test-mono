@@ -11,7 +11,9 @@ MONOREPO_APP_NAME=app1
 if [[ ! -z ${MONOREPO_APP_NAME} ]]; then
   echo "MONOREPO: ${MONOREPO_APP_NAME}"
   NEW_TAG_PREFIX="${MONOREPO_APP_NAME}/v"
-  VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}'| cut -f2 -d /)
+  FULL_VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}')
+  VERSION=$(echo ${FULL_VERSION} | cut -f2 -d /)
+  # VERSION=$(gh release list --limit ${GH_LIMIT} | grep "^${MONOREPO_APP_NAME}" | head -1 | awk '{print $1}'| cut -f2 -d /)
 else
   echo "SINGLE REPO"
   NEW_TAG_PREFIX="v"
@@ -20,6 +22,7 @@ else
   # VERSION=`git describe --abbrev=0 --tags`
   # https://docs.github.com/en/actions/using-workflows/using-github-cli-in-workflows
   VERSION=`gh release view -q ".name" --json name`
+  FULL_VERSION=${VERSION}
 fi
 
 # replace . with space so can split into an array
@@ -55,7 +58,8 @@ NEW_VERSION="$VNUM1.$VNUM2.$VNUM3"
 NEW_TAG="${NEW_TAG_PREFIX}$NEW_VERSION"
 
 
-echo "Updating $VERSION to $NEW_TAG"
+# echo "Updating $VERSION to $NEW_TAG"
+echo "Updating $FULL_VERSION to $NEW_TAG"
 
 # get current hash and see if it already has a tag
 GIT_COMMIT=`git rev-parse HEAD`
