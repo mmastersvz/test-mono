@@ -25,8 +25,11 @@ else
   FULL_VERSION=${VERSION}
 fi
 
+echo "==============:======================="
 echo "NEW_TAG_PREFIX: ${NEW_TAG_PREFIX}"
 echo "FULL_VERSION  : ${FULL_VERSION}"
+echo "VERSION       : ${VERSION}"
+echo "==============:======================="
 
 # replace . with space so can split into an array
 VERSION_BITS=(${VERSION//./ })
