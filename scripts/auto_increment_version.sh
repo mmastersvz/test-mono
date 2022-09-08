@@ -2,7 +2,7 @@
 
 GH_LIMIT=100
 MONOREPO_APP_NAME=$1
-MONOREPO_APP_NAME=app1
+# MONOREPO_APP_NAME=app1
 
 # gh release list --limit 100 | grep "^app2"
 # gh release list --limit 100 | grep "^app1" | head -1 | awk '{print $1}'
@@ -26,6 +26,7 @@ else
 fi
 
 echo "NEW_TAG_PREFIX: ${NEW_TAG_PREFIX}"
+echo "FULL_VERSION  : ${FULL_VERSION}"
 
 # replace . with space so can split into an array
 VERSION_BITS=(${VERSION//./ })
