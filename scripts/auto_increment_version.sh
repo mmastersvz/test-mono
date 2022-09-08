@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # if a monorepo pass the app name
 
 # may need to increase for monorepo if several versions between
@@ -61,7 +62,7 @@ NEW_VERSION="$VNUM1.$VNUM2.$VNUM3"
 NEW_TAG="${NEW_TAG_PREFIX}$NEW_VERSION"
 
 echo ""
-echo "Updating $FULL_VERSION to $NEW_TAG"
+echo "Updating \"${FULL_VERSION}\" to \"${NEW_TAG}\""
 echo ""
 
 # get current hash and see if it already has a tag
